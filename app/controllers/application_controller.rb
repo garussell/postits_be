@@ -2,7 +2,7 @@ class ApplicationController < ActionController::API
   before_action :authorized
 
   def encode_token(payload)
-    JWT.encode(payload, Rails.application.credentials.secret_key_base)
+    JWT.encode(payload, 'Secret')
   end
 
   def auth_header
@@ -13,9 +13,8 @@ class ApplicationController < ActionController::API
     if auth_header
       token = auth_header.split(' ')[1]
       begin
-        JWT.decode(token, Rails.application.credentials.secret_key_base, true, algorithm: 'HS256')
-      rescue JWT::DecodeError => e
-        Rails.logger.error("JWT Decode Error: #{e.message}")
+        JWT.decode(token, 'Secret', true, algorithm: 'HS256')
+      rescue JWT::DecodeError
         nil
       end
     end
@@ -27,12 +26,14 @@ class ApplicationController < ActionController::API
       @user = User.find_by(id: user_id)
     end
   end
+  
 
   def logged_in?
     !!current_user
   end
 
   def authorized
+
     render json: { message: 'Please log in' }, status: :unauthorized unless logged_in?
   end
 end
