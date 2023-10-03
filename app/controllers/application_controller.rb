@@ -13,9 +13,9 @@ class ApplicationController < ActionController::API
     if auth_header
       token = auth_header.split(' ')[1]
       begin
-        JWT.decode(token, Rails.application.credentials.secret_key_base, true, algorithm: 'HS256') # Should ENV variable for secret
-      rescue JWT::DecodeError
-        nil
+        JWT.decode(token, Rails.application.credentials.secret_key_base, true, algorithm: 'HS256') 
+      rescue JWT::DecodeError => e
+        Rails.logger.error "JWT::DecodeError: #{e.message}"
       end
     end
   end
