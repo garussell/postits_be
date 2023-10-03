@@ -15,7 +15,7 @@ class ApplicationController < ActionController::API
       begin
         JWT.decode(token, Rails.application.credentials.secret_key_base, true, algorithm: 'HS256') # Should ENV variable for secret
       rescue JWT::DecodeError
-        render json: { message: 'Invalid token' }, status: :unauthorized
+        nil
       end
     end
   end
