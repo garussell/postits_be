@@ -22,11 +22,7 @@ class UsersController < ApplicationController
   end
 
   def auto_login
-    if logged_in?
-      render json: @user
-    else
-      render json: { message: 'No user is logged in' }, status: :unauthorized
-    end
+    render json: @user
   end
   
   private
